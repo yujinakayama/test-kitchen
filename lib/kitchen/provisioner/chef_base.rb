@@ -93,6 +93,17 @@ module Kitchen
           map { |dir| File.join(config[:root_path], dir) }.join(" ")
         lines = ["#{sudo("rm")} -rf #{dirs}", "mkdir -p #{config[:root_path]}"]
 
+        # Generate an Ohai hint for the driver
+
+        # There is no easy way to determine currently configured Driver
+        # from within a Provisioner. :-(
+        driver_name = Kitchen::Config.new.instances.first.driver.name.downcase
+
+        if driver_name
+          lines << "#{sudo('mkdir')} -p /etc/chef/ohai/hints"
+          lines << "#{sudo('touch')} /etc/chef/ohai/hints/#{driver_name}.json"
+        end
+
         Util.wrap_command(lines.join("\n"))
       end
 
