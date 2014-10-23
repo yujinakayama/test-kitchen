@@ -39,5 +39,11 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'maruku',    '~> 0.6'
   gem.add_development_dependency 'simplecov', '~> 0.7'
   gem.add_development_dependency 'tailor',    '~> 1.2'
+
+  # Workaround an over-optimistic dependency in tailor that brings in a
+  # breaking change from the log_switch gem. The issue is tracked here:
+  # https://github.com/turboladen/tailor/issues/160
+  gem.add_development_dependency 'log_switch', '< 1.0.0'
+
   gem.add_development_dependency 'yard',      '~> 0.8'
 end
