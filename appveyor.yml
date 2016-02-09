@@ -1,6 +1,6 @@
 version: "master-{build}"
 
-os: Windows Server 2012
+os: Windows Server 2012 R2
 platform:
   - x64
 
@@ -11,18 +11,20 @@ environment:
 clone_folder: c:\projects\test_kitchen
 clone_depth: 1
 skip_tags: true
-
 branches:
   only:
     - master
 
 install:
+  - systeminfo
   - winrm quickconfig -q
   - SET PATH=C:\Ruby%ruby_version%\bin;%PATH%
   - echo %PATH%
   - ruby --version
+  - gem install bundler --quiet --no-ri --no-rdoc || gem install bundler --quiet --no-ri --no-rdoc || gem install bundler --quiet --no-ri --no-rdoc
+  - gem install rubygems-pkg/rubygems-update-2.4.6.gem
+  - update_rubygems
   - gem --version
-  - gem install bundler --quiet --no-ri --no-rdoc
   - bundler --version
 
 build_script:
