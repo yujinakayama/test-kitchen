@@ -314,8 +314,13 @@ module Kitchen
       def transfer_path_async(locals, remote, connection)
         waits = []
         locals.map do |local|
-          waits.push connection.upload_path(local, remote)
-          waits.shift.wait while waits.length >= config[:max_ssh_sessions]
+          puts local
+          waits.push connection.upload_path(local, remote) { |_ch, name, sent, total| puts "progress: #{sent}/#{total} #{name}" }
+          puts "uploading #{local}"
+          while waits.length >= config[:max_ssh_sessions]
+            puts "waiting (waits.length:#{waits.length} >= config[:max_ssh_sessions]:#{config[:max_ssh_sessions]})"
+            waits.shift.wait
+          end
         end
         waits.each(&:wait)
       end
